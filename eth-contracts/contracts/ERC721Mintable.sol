@@ -52,7 +52,9 @@ contract Ownable {
 //  4) create 'whenNotPaused' & 'paused' modifier that throws in the appropriate situation
 //  5) create a Paused & Unpaused event that emits the address that triggered the event
 
-contract ERC165 {
+contract ERC165 is Ownable {
+    bool private _paused;
+
     bytes4 private constant _INTERFACE_ID_ERC165 = 0x01ffc9a7;
     /*
      * 0x01ffc9a7 ===
@@ -64,12 +66,34 @@ contract ERC165 {
      */
     mapping(bytes4 => bool) private _supportedInterfaces;
 
+    // Events
+    event Paused(address actor);
+    event Unpaused(address actor);
+
+    // Modifiers
+    modifier whenNotPaused() {
+        require(_paused == false, "Contract is paused");
+        _;
+    }
+
+    modifier paused() {
+        require(_paused == true, "Contract is not paused");
+        _;
+    }
+
+    // Functions
     /**
      * @dev A contract implementing SupportsInterfaceWithLookup
      * implement ERC165 itself
      */
     constructor () internal {
         _registerInterface(_INTERFACE_ID_ERC165);
+        _paused = false;
+        emit Unpaused(msg.sender);
+    }
+
+    function getPaused () public view onlyOwner returns (bool) {
+        return _paused;
     }
 
     /**
