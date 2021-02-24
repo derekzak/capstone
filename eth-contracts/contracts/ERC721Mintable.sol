@@ -92,8 +92,13 @@ contract ERC165 is Ownable {
         emit Unpaused(msg.sender);
     }
 
-    function getPaused () public view onlyOwner returns (bool) {
-        return _paused;
+    function setPaused (bool paused) public onlyOwner {
+        _paused = paused;
+        if (paused) {
+            emit Paused(msg.sender);
+        } else {
+            emit Unpaused(msg.sender);
+        }
     }
 
     /**
