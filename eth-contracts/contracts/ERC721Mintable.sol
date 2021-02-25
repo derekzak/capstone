@@ -92,9 +92,9 @@ contract ERC165 is Ownable {
         emit Unpaused(msg.sender);
     }
 
-    function setPaused (bool paused) public onlyOwner {
-        _paused = paused;
-        if (paused) {
+    function setPaused (bool pause) public onlyOwner {
+        _paused = pause;
+        if (pause) {
             emit Paused(msg.sender);
         } else {
             emit Unpaused(msg.sender);
@@ -117,7 +117,7 @@ contract ERC165 is Ownable {
     }
 }
 
-contract ERC721 is Pausable, ERC165 {
+contract ERC721 is Ownable, ERC165 {
 
     event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);
 
@@ -158,12 +158,12 @@ contract ERC721 is Pausable, ERC165 {
     function balanceOf(address owner) public view returns (uint256) {
         // TODO return the token balance of given address
         // TIP: remember the functions to use for Counters. you can refresh yourself with the link above
-        return _owndedTokensCount(owner).current();
+        return _ownedTokensCount[owner].current();
     }
 
     function ownerOf(uint256 tokenId) public view returns (address) {
         // TODO return the owner of the given tokenId
-        return _tokenOwner(tokenId);
+        return _tokenOwner[tokenId];
     }
 
 //    @dev Approves another address to transfer the given token ID
@@ -176,7 +176,7 @@ contract ERC721 is Pausable, ERC165 {
         require(_isApprovedOrOwner(msg.sender, tokenId), "Approver must be approved or owner of token");
 
         // TODO add 'to' address to token approvals
-        _tokenApprovals(tokenId) = to;
+        _tokenApprovals[tokenId] = to;
 
         // TODO emit Approval Event
         emit Approval(msg.sender, to, tokenId);
@@ -184,7 +184,7 @@ contract ERC721 is Pausable, ERC165 {
 
     function getApproved(uint256 tokenId) public view returns (address) {
         // TODO return token approval if it exists
-        return _tokenApprovals(tokenId);
+        return _tokenApprovals[tokenId];
     }
 
     /**
@@ -255,8 +255,8 @@ contract ERC721 is Pausable, ERC165 {
         require(_exists(tokenId), "Token ID already exists");
 
         // TODO mint tokenId to given address & increase token count of owner
-        _tokenOwner(tokenId) = to;
-        _ownedTokensCount(to).increment();
+        _tokenOwner[tokenId] = to;
+        _ownedTokensCount[to].increment();
 
         // TODO emit Transfer event
         emit Transfer(address(0), to, tokenId);
@@ -276,9 +276,9 @@ contract ERC721 is Pausable, ERC165 {
         _clearApproval(tokenId);
 
         // TODO: update token counts & transfer ownership of the token ID
-        _ownedTokensCount(from).decrement();
-        _ownedTokensCount(to).increment();
-        _tokenOwner(tokenId) = to;
+        _ownedTokensCount[from].decrement();
+        _ownedTokensCount[to].increment();
+        _tokenOwner[tokenId] = to;
 
         // TODO: emit correct event
         emit Transfer(from, to, tokenId);
@@ -554,14 +554,11 @@ contract ERC721Metadata is ERC721Enumerable, usingOraclize {
 //      -calls the superclass mint and setTokenURI functions
 contract CapstoneToken is ERC721Metadata {
 
-    constructor (string memory name, string memory symbol, string memory baseTokenURI) public {
-        ERC721Metadata("Capstone Token", "CST", "https://s3-us-west-2.amazonaws.com/udacity-blockchain/capstone/");
-    }
+    constructor() ERC721Metadata("Capstone Token", "CST", "https://s3-us-west-2.amazonaws.com/udacity-blockchain/capstone/") public {}
 
-    function mint(address to, uint256 tokenId, string tokenURI) public onlyOwner returns (bool) {
+    function mint(address to, uint256 tokenId, string memory tokenURI) public onlyOwner returns (bool) {
         _mint(to, tokenId);
         setTokenURI(tokenId);
-        bytes memory tokenURIString = bytes(tokenURI(tokenId));
-        return (tokenURIString.length > 0);
+        return (bytes(tokenURI(tokenId)).length > 0);
     }
 }
