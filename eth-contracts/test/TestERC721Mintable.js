@@ -38,7 +38,7 @@ contract('TestERC721Mintable', accounts => {
         })
 
         it('should fail when minting when address is not contract owner', async function () {
-            let result = capstoneToken.mint(account_two, 1, "1", {from: account_two});
+            let result = capstoneToken.mint(account_two, 1, "https://s3-us-west-2.amazonaws.com/udacity-blockchain/capstone/1", {from: account_two});
             assert(result == false, "Non contract owner should not be able to mint a new token");
         })
 

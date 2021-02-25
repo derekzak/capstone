@@ -559,6 +559,6 @@ contract CapstoneToken is ERC721Metadata {
     function mint(address to, uint256 tokenId, string memory tokenURI) public onlyOwner returns (bool) {
         _mint(to, tokenId);
         setTokenURI(tokenId);
-        return (bytes(tokenURI(tokenId)).length > 0);
+        return (keccak256(bytes(_tokenURIs[tokenId])) == keccak256(bytes(tokenURI)));
     }
 }
