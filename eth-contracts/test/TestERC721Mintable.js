@@ -1,4 +1,4 @@
-var CapstoneToken = artifacts.require('CapstoneToken');
+var ERC721Mintable = artifacts.require('ERC721Mintable');
 
 contract('TestERC721Mintable', accounts => {
 
@@ -7,15 +7,15 @@ contract('TestERC721Mintable', accounts => {
 
     describe('match erc721 spec', function () {
         beforeEach(async function () {
-            let capstoneToken = await CapstoneToken.new({from: account_one});
+            let erc721Mintable = await ERC721Mintable.new({from: account_one});
 
             // TODO: mint multiple tokens
-            capstoneToken.mint(account_one, 1, "1", {from: account_one});
-            capstoneToken.mint(account_two, 2, "2", {from: account_one});
+            erc721Mintable.mint(account_one, 1, {from: account_one});
+            erc721Mintable.mint(account_two, 2, {from: account_one});
         })
 
         it('should return total supply', async function () {
-            assert(capstoneToken.totalSupply() == 2);
+            assert(erc721Mintable.totalSupply() == 2);
         })
 
         it('should get token balance', async function () {
@@ -34,11 +34,11 @@ contract('TestERC721Mintable', accounts => {
 
     describe('have ownership properties', function () {
         beforeEach(async function () {
-            let capstoneToken = await CapstoneToken.new({from: account_one});
+            let erc721Mintable = await ERC721Mintable.new({from: account_one});
         })
 
         it('should fail when minting when address is not contract owner', async function () {
-            let result = capstoneToken.mint(account_two, 1, "https://s3-us-west-2.amazonaws.com/udacity-blockchain/capstone/1", {from: account_two});
+            let result = erc721Mintable.mint(account_two, 1, {from: account_two});
             assert(result == false, "Non contract owner should not be able to mint a new token");
         })
 
