@@ -1,5 +1,4 @@
 var Test = require('../config/testConfig.js');
-var ERC721Mintable = artifacts.require('ERC721Mintable');
 
 contract('TestERC721Mintable', accounts => {
 
