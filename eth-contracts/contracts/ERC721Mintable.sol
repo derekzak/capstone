@@ -37,6 +37,10 @@ contract Ownable {
     }
 
     // Functions
+    function owner() public view returns (address) {
+        return _owner;
+    }
+
     function transferOwnership(address newOwner) public onlyOwner isAddress(newOwner) {
         // TODO add functionality to transfer control of the contract to a newOwner.
         // make sure the new owner is a real address
@@ -252,7 +256,7 @@ contract ERC721 is Ownable, ERC165 {
 
         // TODO revert if given tokenId already exists or given address is invalid
         // added isAddress modifier
-        require(_exists(tokenId), "Token ID already exists");
+        require(!_exists(tokenId), "Token ID already exists");
 
         // TODO mint tokenId to given address & increase token count of owner
         _tokenOwner[tokenId] = to;
