@@ -1,6 +1,20 @@
 # Udacity Blockchain Capstone
 
-The capstone will build upon the knowledge you have gained in the course in order to build a decentralized housing product. 
+The capstone will build upon the knowledge gained in the Udacity Blockchain course in order to build a decentralized housing product.  This is a ERC721 token used to verify ownership of a property.  zk-SNARKs is used to create a verification system which can prove that you are the owner of a title to the property without revealing specifics of the property.  The tokens can then be placed in a blockchain marketplace for sale.
+
+# Installation
+- Clone the project
+- npm install
+- start ganache gui
+- cd ./eth-contracts
+- truffle compile
+
+# Testing
+- cd ./eth-contracts
+- truffle test (All 11 tests should pass)
+
+# Rinkeby Details
+- truffle migrate --network rinkeby --reset
 
 # Project Resources
 
