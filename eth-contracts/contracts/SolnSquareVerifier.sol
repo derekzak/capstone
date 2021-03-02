@@ -13,17 +13,16 @@ contract SolnSquareVerifier is Verifier, ERC721Mintable {
         uint[2] input;
         address solutionAddress;
         uint256 tokenId;
+        bytes32 key;
     }
 
     // TODO define an array of the above struct
-    mapping(bytes32 => Solution) solutions;
+    mapping(uint256 => Solution) solutions;
 
     // TODO define a mapping to store unique solutions submitted
     mapping(bytes32 => bool) solutionsSubmitted;
 
-    constructor(address verifierAddress)
-        ERC721Mintable() public
-    {
+    constructor(address verifierAddress) ERC721Mintable() public {
         verifierContract = Verifier(verifierAddress);
     }
 
@@ -32,24 +31,22 @@ contract SolnSquareVerifier is Verifier, ERC721Mintable {
 
     // TODO Create a function to add the solutions to the array and emit the event
     function addSolution(uint[2] memory a, uint[2][2] memory b, uint[2] memory c, uint[2] memory input, address solutionAddress, uint256 tokenId) public returns (bool) {
-        Solution memory currentSolution = Solution(a, b, c, input, solutionAddress, tokenId);
         bytes32 key = keccak256(abi.encodePacked(a, b, c, input, solutionAddress, tokenId));
-        solutions[key] = currentSolution;
+        Solution memory currentSolution = Solution(a, b, c, input, solutionAddress, tokenId, key);
+        solutions[tokenId] = currentSolution;
         emit SolutionAdded(msg.sender);
-        bool verified = verifiedMint(key, solutionAddress, tokenId);
-        return verified;
     }
 
     // TODO Create a function to mint new NFT only after the solution has been verified
     //  - make sure the solution is unique (has not been used before)
     //  - make sure you handle metadata as well as tokenSupply
-    function verifiedMint(bytes32 key, address solutionAddress, uint256 tokenId) public returns (bool) {
-        require(solutionsSubmitted[key] == false, "Solution already exists");
+    function verifiedMint(address solutionAddress, uint256 tokenId) public returns (bool) {
+        require(solutions[tokenId].solutionAddress != address(0), "Solution does not exist");
         bool verificationResult = false;
-        Solution memory currentSolution = solutions[key];
+        Solution memory currentSolution = solutions[tokenId];
         bool verification = verifierContract.verifyTx(currentSolution.a, currentSolution.b, currentSolution.c, currentSolution.input);
         if (verification == true) {
-            solutionsSubmitted[key] = true;
+            solutionsSubmitted[currentSolution.key] = true;
             super.mint(solutionAddress, tokenId);
             verificationResult = true;
         }
