@@ -17,7 +17,7 @@ const CONTRACT_ADDRESS = process.env.CONTRACT_ADDRESS;
 const MNEMONIC = process.env.MNEMONIC;
 const INFURA_KEY = process.env.INFURA_KEY;
 
-if (!OWNER_ADDRESS || !CONTRACT_ADDRESS || !MNEMONIC) {
+if (!OWNER_ADDRESS || !CONTRACT_ADDRESS || !MNEMONIC || !INFURA_KEY) {
     console.error("Please set env vars: OWNER_ADDRESS, CONTRACT_ADDRESS, MNEMONIC, INFURA_KEY");
     return;
 }
@@ -26,7 +26,7 @@ const contract = require('../eth-contracts/build/contracts/SolnSquareVerifier.js
 const ABI = contract.abi;
 
 async function main() {
-    const provider = new HDWalletProvider(mnemonic, `https://rinkeby.infura.io/v3/${INFURA_KEY}`);
+    const provider = new HDWalletProvider(MNEMONIC, `https://rinkeby.infura.io/v3/${INFURA_KEY}`);
     const web3Instance = new Web3(
         provider
     )
@@ -39,15 +39,16 @@ async function main() {
                 let inputs = solutionProofs[i].inputs;
 
                 console.log("owner address: " + OWNER_ADDRESS + "\n");
-                console.log("count: " + i + "\n");
-                console.log("proofs: "+ proofs + "\n");
-                console.log("inputs: "+ inputs + "\n");
+                console.log("count: " + i+1 + "\n");
+                console.log("proofs: " + proofs + "\n");
+                console.log("inputs: " + inputs + "\n");
 
-                let result = await capstoneToken.methods.addSolution(OWNER_ADDRESS, i, ...proofs, inputs).send({ from: OWNER_ADDRESS });
+                let result = await capstoneToken.methods.addSolution(...proofs, inputs, OWNER_ADDRESS, i).send({ from: OWNER_ADDRESS });
                 console.log("Solution added - Transaction: " + result.transactionHash);
 
                 result = await capstoneToken.methods.mint(OWNER_ADDRESS, i).send({ from: OWNER_ADDRESS });
                 console.log("Minted token - Transaction: " + result.transactionHash);
+                console.log("\n********************************************************************\n");
             } catch (e) {
                 console.log("Error: ", e);
             }

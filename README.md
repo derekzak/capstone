@@ -1,5 +1,4 @@
 # Udacity Blockchain Capstone
-
 The capstone will build upon the knowledge gained in the Udacity Blockchain course in order to build a decentralized housing product.  This is a ERC721 token used to verify ownership of a property.  zk-SNARKs is used to create a verification system which can prove that you are the owner of a title to the property without revealing specifics of the property.  The tokens can then be placed in a blockchain marketplace (https://opensea.io) for sale.
 
 # Installation
@@ -119,11 +118,12 @@ Summary
 - ERC721Mintable: https://rinkeby.etherscan.io/address/0x42bA5611DB8BE71Ae85b47B2a04033BEAa4B32C7
 - Verifier: https://rinkeby.etherscan.io/address/0xCcaC16961C85ED23bc601c790BE7800BfFed1C31
 - SolnSquareVerifier: https://rinkeby.etherscan.io/address/0x8bD86F7F44F7edDFE9154cC32bD616302140bEA9
-
+- 10 Minted Tokens: https://rinkeby.etherscan.io/token/0x8bD86F7F44F7edDFE9154cC32bD616302140bEA9
+- Opensea Storefront: https://testnets.opensea.io/collection/capstone-token-v2
+- Opensea Activity: https://testnets.opensea.io/activity/capstone-token-v2
 
 
 # Project Resources
-
 * [Remix - Solidity IDE](https://remix.ethereum.org/)
 * [Visual Studio Code](https://code.visualstudio.com/)
 * [Truffle Framework](https://truffleframework.com/)
