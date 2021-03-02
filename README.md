@@ -19,7 +19,7 @@ The capstone will build upon the knowledge gained in the Udacity Blockchain cour
 # Rinkeby Mint Tokens
 - export OWNER_ADDRESS="<my_address>"
 - export CONTRACT_ADDRESS="<deployed_contract_address>"
-- export MNEUMONIC="<wallet_seed>"
+- export MNEMONIC="<wallet_seed>"
 - export INFURA_KEY="<infura_key>"
 - node scripts/mint.js
 
